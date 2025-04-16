@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+}
+
+.header_line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px;
+    background-color: #111;
+    box-shadow: 0 2px 10px rgba(0, 255, 0, 1.0);
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;  /* Centers the items */
+    width: 100%;
+}
+
+.navbar-nav .nav-item {
+    margin: auto;
+}
+
+.menu {
+    width: 100%;
+    text-align: center;
+}
+
+
+.menu a {
+    position: relative;
+    text-decoration: none;
+    color: #fff; 
+    font-size: 17px;
+    padding: 10px 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* expand the width over 0.3*/
+    transition: color 0.3s ease; 
+}
+/*https://www.30secondsofcode.org/css/s/hover-underline-animation/*/
+/* Hover Underline Effect */
+.menu a::after {
+    content: "";
+    position: absolute; 
+    left: 50%; 
+    bottom: 0;
+    width: 0; 
+    height: 2px; 
+    background-color: #00ff00;
+    /* move element left edge to the center of it parent*/
+    transform: translateX(-50%); 
+    /* expand the width over 0.3*/
+    transition: width 0.3s ease; 
+}
+
+/* Expand Underline on Hover */
+.menu a:hover::after {
+    width: 100%; 
+}
+
+.menu a:hover {
+    color: #00ff00; 
+}
+
+/* Logo */
+.logo_container {
+    max-width: 1200px;
+    padding: 20px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    margin-top: 30px;
+}
+
+.logo_container img {
+    float: left;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo_container img:hover {
+    transform: scale(1.08); 
+}
+
+
+.title {
+    font-size: 50px;
+    text-transform: uppercase;
+    color: #00ff00;
+    margin: 20px 0;
+}
+
+h2 {
+    font-size: 27px;
+    text-transform: uppercase;
+    color: #00ff00;
+    margin: 20px 0;
+}
+
+.phrase, .phrase2 {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.content {
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px;
+    background: #111;
+    box-shadow: 0 2px 10px rgba(0,255,0,0.3)
+}
+
+
+.carousel {
+    max-width: 600px; 
+    margin: auto; 
+}
+
+.slider-img {
+    max-height: 150px; 
+    max-width: 100%; 
+    object-fit: contain; 
+    margin: auto; 
+    box-shadow: 0px 0px 10px #00ff00; 
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 10%; 
+}
+
+.fixed-height {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* form css */
+.form-container {
+    background-color: #000;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 25px #00ff00;
+    max-width: 400px;
+    margin: auto;
+    margin-top: 60px;
+    padding: 30px;
+    color: #fff;
+    border-radius: 10px;
+}
+.form-control, .form-select {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #00ff00;
+}
+label {
+    margin-top: 10px;
+    color: #00ff00;
+}
+.btn-green {
+    background-color: #00ff00;
+    color: #000;
+    border: none;
+}
+.btn-green:disabled {
+    background-color: #444;
+    color: #666;
+}
+.form-check-label {
+    color: #ccc;
+}
+.form-check-input:checked {
+    background-color: #00ff00;
+    border-color: #00ff00;
+}
+
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .title {
+        font-size: 40px;
+        text-transform: uppercase;
+        color: #00ff00;
+        margin: 20px 0;
+    }
+
+    .nav_menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav_menu.active {
+        display: flex;
+    }
+    
+    .nav_menu ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav_menu ul li {
+        text-align: center;
+        padding: 15px 20px;
+        width: 100%;
+    }
+
+    .menu li {
+        padding: 10px;
+    }
+
+    .logo_container {
+        float: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        margin-top: 10px;
+    }
+
+    h2 {
+        font-size: 25px;
+        text-transform: uppercase;
+        color: #00ff00;
+        margin: 20px 0;
+    }
+
+    .phrase, .phrase2 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    .logo_container img {
+        max-width: 120px;
+        
+    }
+
+    .title {
+        font-size: 27px;
+        text-transform: uppercase;
+        color: #00ff00;
+        margin: 20px 0;
+        justify-content: center;
+    }
+
+
+    .slider {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-height: 350px; /* Reduced size for mobile */
+        max-width: 50%; /* Prevent edge overflow */
+    }
+    
+}
