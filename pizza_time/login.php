@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Step 3: Redirect based on staff position
                 if ($position === 'Manager' || $position === 'Owner') {
-                    header('Location: profile.php');
+                    header('Location: manage.php');
                 } elseif ($position === 'Server') {
-                    header('Location: index.php');
+                    header('Location: server_lookup.php');
                 } else {
                     $form_error = 'Access denied. Unknown position.';
                 }

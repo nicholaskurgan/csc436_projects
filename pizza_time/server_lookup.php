@@ -41,19 +41,19 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav menu">
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/index.html">HOME</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Managment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/guide.html">PC BUILD</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/shop.html">SHOP</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Server_lookup</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/about_us.php">ABOUT US</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/index.html">CONTACT US</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
                     </li>
                 </ul>
             </div>

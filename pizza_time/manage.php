@@ -43,7 +43,7 @@ $fname = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom-green w-100">
+<nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom-green w-100">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -52,19 +52,19 @@ $fname = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn();
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav menu">
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/index.html">HOME</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Managment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/guide.html">PC BUILD</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/shop.html">SHOP</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Server_lookup</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/about_us.php">ABOUT US</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="https://jimmyzhang.rhody.dev/csc372_projects/index.html">CONTACT US</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
                     </li>
                 </ul>
             </div>
