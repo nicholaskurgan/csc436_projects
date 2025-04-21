@@ -2,34 +2,64 @@
     // Include session and DB connection
     require 'includes/session.php';
 
-    // SQL to retrieve staff and their assigned tables
-    $sql = "SELECT 
-                s.fname, 
-                s.lname, 
-                s.position, 
-                t.table_num, 
-                t.datetime_seated
-            FROM tables t
-            JOIN staff s ON t.staffID = s.staffID
-            ORDER BY t.datetime_seated DESC";
+    // Initialize assignments as an empty array
+    $assignments = [];
 
-    // Execute the query using your pdo() helper
-    $assignments = pdo($pdo, $sql)->fetchAll();
+    // Default query to retrieve all staff and their assigned tables
+    $sql = "SELECT 
+                staff.fname, 
+                staff.lname, 
+                staff.position, 
+                tables.table_num, 
+                tables.datetime_seated
+            FROM tables
+            JOIN staff ON tables.staffID = staff.staffID
+            ORDER BY tables.datetime_seated DESC";
+
+    try {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['staffID'])) {
+            // Sanitize and validate staffID
+            $staffID = trim($_POST['staffID']);
+            
+            // Query to retrieve data for a specific staffID
+            $sql = "SELECT 
+                        staff.staffID,
+                        staff.fname, 
+                        staff.lname, 
+                        staff.position,
+                        tables.table_num, 
+                        tables.datetime_seated
+                    FROM tables
+                    JOIN staff ON tables.staffID = staff.staffID
+                    WHERE staff.staffID = :staffID";
+
+            // Prepare and execute the query
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['staffID' => $staffID]);
+            $assignments = $stmt->fetchAll();
+
+            // Debugging: Check if results are empty
+            if (empty($assignments)) {
+                error_log("No results found for staffID: $staffID");
+            }
+        } else {
+            // Execute the default query
+            $stmt = $pdo->query($sql);
+            $assignments = $stmt->fetchAll();
+        }
+    } catch (PDOException $e) {
+        // Log any database errors
+        error_log("Database error: " . $e->getMessage());
+    }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Staff Table Assignments</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
-    <link rel="preload" href="CSS/style.css" as="style">
-
-    <link rel = "stylesheet" href = "CSS/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom-green w-100">
@@ -37,7 +67,6 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- change link if you had the chance-->
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav menu">
                     <li class="nav-item">
@@ -57,11 +86,18 @@
                     </li>
                 </ul>
             </div>
-
         </div>
     </nav>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Staff Table Assignments</h2>
+
+        <!-- Form to input staffID -->
+        <form method="POST" action="server_lookup.php" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="staffID" class="form-control" placeholder="Enter Staff ID (put 0 to see all servers)" required>
+                <button type="submit" class="btn btn-dark">Search</button>
+            </div>
+        </form>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
@@ -77,9 +113,9 @@
                     <?php foreach ($assignments as $row): ?>
                         <tr>
                             <td><?= htmlspecialchars($row['fname'] . ' ' . $row['lname']) ?></td>
-                            <td><?= htmlspecialchars($row['position']) ?></td>
+                            <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['table_num']) ?></td>
-                            <td><?= date('M d, Y H:i:s', strtotime($row['datetime_seated'])) ?></td>
+                            <td><?= isset($row['datetime_seated']) ? date('M d, Y H:i:s', strtotime($row['datetime_seated'])) : 'N/A' ?></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($assignments)): ?>
