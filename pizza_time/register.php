@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($form_errors['email']) && empty($form_errors['password'])) {
-        header("Location: thank_you.php");
+        header("Location: login.php");
         exit;
     } else {
         $form_message = 'Please fix the errors below.';
