@@ -51,20 +51,20 @@ $fname = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn();
             <!-- change link if you had the chance-->
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav menu">
-                    <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Managment</a>
+                <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="manage.php">Managment</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white fw-bold px-lg-5" href="#">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Server_lookup</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="server_lookup.php">Server_lookup</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="logout.php">Log_out</a>
                     </li>
                 </ul>
             </div>
