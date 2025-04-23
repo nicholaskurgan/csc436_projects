@@ -23,11 +23,6 @@ if ($position !== 'Manager' && $position !== 'Owner') {
     die("Access denied. This page is for Managers and Owners only.");
 }
 
-$sql = "SELECT fname FROM staff WHERE staffID = :staffID";
-$fname = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn();
-
-
-//manager salary update query code
 // Initialize variables for salary update
 $update_message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_POST['newSalary'])) {
@@ -53,6 +48,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_PO
     }
 }
 
+// Initialize variables for adding new staff
+$add_message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lname'], $_POST['position'])) {
+    $fname = trim($_POST['fname']);
+    $lname = trim($_POST['lname']);
+    $position = trim($_POST['position']);
+    $salary = isset($_POST['salary']) && is_numeric($_POST['salary']) ? $_POST['salary'] : null;
+
+    // Validate inputs
+    if (empty($fname) || empty($lname) || !in_array($position, ['Server', 'Kitchen', 'Manager'])) {
+        $add_message = 'Invalid input. Please fill out all required fields correctly.';
+    } else {
+        // Determine the next available staffID
+        try {
+            $sql = "SELECT MAX(staffID) AS maxStaffID FROM staff";
+            $stmt = $pdo->query($sql);
+            $maxStaffID = $stmt->fetchColumn();
+            $newStaffID = $maxStaffID ? $maxStaffID + 1 : 1; // Start from 1 if no staff exists
+
+            // Ensure staffID is not 0
+            if ($newStaffID === 0) {
+                $newStaffID = 1;
+            }
+
+            // Insert the new staff member into the database
+            $sql = "INSERT INTO staff (staffID, position, fname, lname, salary) VALUES (:staffID, :position, :fname, :lname, :salary)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                'staffID' => $newStaffID,
+                'position' => $position,
+                'fname' => $fname,
+                'lname' => $lname,
+                'salary' => $salary
+            ]);
+            $add_message = 'New staff member added successfully.';
+        } catch (PDOException $e) {
+            $add_message = 'Error adding staff member: ' . $e->getMessage();
+        }
+    }
+}
 
 
 ?>
@@ -103,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_PO
     </nav>
 	
 
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Update Staff Salary</h2>
 
@@ -115,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_PO
                 <label for="targetStaffID" class="form-label">Staff ID</label>
                 <input type="text" name="targetStaffID" id="targetStaffID" class="form-control" placeholder="Enter Staff ID" required>
             </div>
-            
+
             <div class="mb-3">
                 <label for="newSalary" class="form-label">New Salary</label>
                 <input type="text" name="newSalary" id="newSalary" class="form-control" placeholder="Enter New Salary" required>
@@ -125,6 +161,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_PO
     </div>
 
 
+
+    <div class="container mt-5">
+    <h2 class="text-center mb-4">Add New Staff Member</h2>
+
+    <?php if ($add_message): ?>
+        <div class="alert alert-info text-center"><?= htmlspecialchars($add_message) ?></div>
+    <?php endif; ?>
+
+    <form method="POST" action="manage.php" class="mb-4">
+        <div class="mb-3">
+            <label for="fname" class="form-label">First Name</label>
+            <input type="text" name="fname" id="fname" class="form-control" placeholder="Enter First Name" required>
+        </div>
+        <div class="mb-3">
+            <label for="lname" class="form-label">Last Name</label>
+            <input type="text" name="lname" id="lname" class="form-control" placeholder="Enter Last Name" required>
+        </div>
+        <div class="mb-3">
+            <label for="position" class="form-label">Position</label>
+            <select name="position" id="position" class="form-select" required>
+                <option value="Server">Server</option>
+                <option value="Kitchen">Kitchen</option>
+                <option value="Manager">Manager</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="salary" class="form-label">Salary (Optional)</label>
+            <input type="text" name="salary" id="salary" class="form-control" placeholder="Enter Salary">
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Add Staff Member</button>
+    </form>
+</div>
 
 
 
