@@ -1,0 +1,7 @@
+http://localhost:80/pizza/login.php
+
+owner login
+hthompson@gmail.com
+csc436
+
+this is purely for easier testing on nicks machine, happy bug hunting
