@@ -1,81 +1,64 @@
 <?php
 
-	// Include the database connection script
-	require 'database-connection.php';
+	// include the database connection script
+	require_once 'includes/database-connection.php';
 
-	// Start/renew session
+
+	// start/renew session
 	session_start();										 	
 
-	// Is user logged in?
+	// is user logged in?
 	$logged_in = $_SESSION['logged_in'] ?? false; 		      
 
 
-	// Remember user passed login
+	// remember user passed login
 	function login($email)
 	{
-		// Update session id
+		// update session id
     	session_regenerate_id(true);
 
-    	// Set logged_in key to true
+    	// set logged_in key to true
 	    $_SESSION['logged_in'] = true;
 
-	    // Set username key to one from form 
+	    // set email key to one from form 
 	    $_SESSION['email'] = $email;
 	}
 
-	// Check if user logged in
+	// check if user logged in
 	function require_login($logged_in)					
 	{
 		// If not logged in
 	    if ($logged_in == false) {
-	    	// Send to login page 						
+	    	// send to login page 						
 	        header('Location: login.php');
 
-	        // Stop rest of page running				
+	        // stop rest of page running				
 	        exit;    									
 	    }
 	}
 
-	// Terminate the session
+	// terminate the session
 	function logout()  
 	{
-		// Clear contents of array
+		// clear contents of array
 	    $_SESSION = [];
 
-	    // Get session cookie parameters
+	    // get session cookie parameters
 	    $params = session_get_cookie_params();
 
-	    // Delete session cookie			
+	    // delete session cookie			
 	    setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'],
 	        $params['secure'], $params['httponly']);	
 
-	    // Delete session file
+	    // delete session file
 	    session_destroy();								
 	}
-
-	// Check username and password in db
-	function authenticate($pdo, $username, $password) {	   
-	    
-	    // Get username and password from db and check if matches what user typed in login form												  
-	    $sql = "SELECT username, password
-	            FROM users
-	            WHERE username = :username AND password = :password";
-
-	    // Execute SQL query w/args for username and password
-	    $user = pdo($pdo, $sql, ['username' => $username, 'password' => $password])->fetch();
-
-	    // Return username and password from db
-	    return $user;
-  	}
-
-?>
-
-
-
-
-
-
-
-
-
-
+	// authenticate user credentials by verifying email and password.
+	function authenticate($pdo, $email, $password) {
+		// sql query to select password_hash from the db for the provided email
+		$sql = "SELECT password_hash FROM users WHERE email = :email";
+		// execute query and fetch the user row as an associative array
+		$user = pdo($pdo, $sql, ['email' => $email])->fetch();
+		// returns true if password  matched
+		return $user && password_verify($password, $user['password_hash']);
+	}
