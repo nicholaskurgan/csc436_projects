@@ -1,0 +1,165 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+}
+  
+* {
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+}
+.left-side {
+    flex: 1;
+    background: url('https://pbs.twimg.com/media/E-YoMXZX0AQOHoI.jpg') center/cover;
+    background-size: cover;
+    position: relative;
+}
+.left-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.7));
+}
+
+.right-side {
+    overflow-y: auto;
+    height: 100vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 20px;
+    position: relative;
+}
+
+  /* Form wrapper - removed text-align:center */
+.form-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    max-width: 800px;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-shadow: 0 0 25px #454945;
+    padding: 30px;
+    animation: glow 2s infinite alternate;
+    margin: auto;
+}
+  
+  /* Left-aligned tabs */
+.tabs {
+    display: flex;
+    justify-content: flex-start; /* Changed from center */
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.tab:first-child {
+    margin-right: auto; /* Pushes first tab (Login) to left */
+}
+
+.tab:last-child {
+    margin-left: auto; /* Pushes last tab (Sign Up) to right */
+}
+  
+  /* Form element adjustments */
+.form-label {
+    color: #000;
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+  
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 12px; /* Slightly larger padding */
+    margin: 10px 0; /* More vertical spacing */
+}
+  
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 2px solid transparent;
+    color: #000000;
+    font-size: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.tab.active {
+    border-color: #00ff00;
+    color: #000000;
+    text-shadow: 0 0 10px #00ff00;
+}
+.tab:hover {
+    color: #252925;
+}
+.form {
+    display: none;
+}
+.form.active {
+    display: block;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 0.75 0;
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #00ff00;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+input:focus {
+    outline: none;
+    box-shadow: 0 0 15px #00ff00;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 0.75px;
+    background-color: #00ff00;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00ff00;
+}
+  
+button:disabled {
+    background-color: #111 !important;  
+    color: #00ff00 !important;          
+    border: 1px solid #00ff00;
+    opacity: 1 !important;              
+    cursor: not-allowed;
+}
+  
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px #292b29;
+    }
+    to {
+        box-shadow: 0 0 25px #00ff00;
+    }
+}
