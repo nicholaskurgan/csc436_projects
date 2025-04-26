@@ -79,7 +79,7 @@
                         <a class="nav-link text-white fw-bold px-lg-5" href="server_lookup.php">Server_lookup</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="#">not sure yet</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="order_view.php">Order_view</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white fw-bold px-lg-5" href="logout.php">Log_out</a>
