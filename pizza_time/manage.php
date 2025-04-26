@@ -90,6 +90,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
 }
 
 
+
+// Handle clearing orders and food tables
+$clear_message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clearTables'])) {
+    if ($_POST['clearTables'] === 'confirm') {
+        try {
+            $pdo->exec("TRUNCATE TABLE orders");
+            $pdo->exec("TRUNCATE TABLE food");
+            $clear_message = 'Orders and food tables have been cleared successfully.';
+        } catch (PDOException $e) {
+            $clear_message = 'Error clearing tables: ' . $e->getMessage();
+        }
+    } else {
+        $clear_message = 'Click the button again to confirm clearing the tables.';
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
     </nav>
 	
 
-
+<!-- change staff salary -->
     <div class="container mt-5">
         <h2 class="text-center mb-4">Update Staff Salary</h2>
 
@@ -161,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
     </div>
 
 
-
+<!-- add in a new staff -->
     <div class="container mt-5">
     <h2 class="text-center mb-4">Add New Staff Member</h2>
 
@@ -191,6 +209,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
             <input type="text" name="salary" id="salary" class="form-control" placeholder="Enter Salary">
         </div>
         <button type="submit" class="btn btn-dark w-100">Add Staff Member</button>
+    </form>
+</div>
+
+<!-- clear all orders from database -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Clear Orders and Food Tables</h2>
+
+    <?php if ($clear_message): ?>
+        <div class="alert alert-info text-center"><?= htmlspecialchars($clear_message) ?></div>
+    <?php endif; ?>
+
+    <form method="POST" action="manage.php" class="text-center">
+        <input type="hidden" name="clearTables" value="<?= isset($_POST['clearTables']) && $_POST['clearTables'] !== 'confirm' ? 'confirm' : '' ?>">
+        <button type="submit" class="btn btn-danger">
+            <?= isset($_POST['clearTables']) && $_POST['clearTables'] !== 'confirm' ? 'Confirm Clear Tables' : 'Clear Tables' ?>
+        </button>
     </form>
 </div>
 

@@ -7,7 +7,7 @@ scarlett_hall@gmail.com
 
 owner login-
 jane_thompson
-jane_thompson@gmail.com
+jthompson@gmail.com
 123456
 
 manager login-
