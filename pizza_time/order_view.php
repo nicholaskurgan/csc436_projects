@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['cust_name'])) {
             JOIN menu ON food.item_id = menu.item_id
             WHERE customer.first_name LIKE :first   -- Match first name (flexible)
               AND customer.last_name LIKE :last     -- Match last name (flexible)
-            ORDER BY orders.order_time DESC";        -- Sort orders newest first
+            ORDER BY orders.order_time DESC";        
 
     try {
         // Prepare the SQL query to avoid SQL injection
@@ -63,6 +63,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['cust_name'])) {
     <!-- Link to external CSS styles -->
     <link rel="stylesheet" href="css/style.css"> <!-- adjust path if needed -->
 </head>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom-green w-100">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- change link if you had the chance-->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav menu">
+                <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="manage.php">Managment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="#">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="server_lookup.php">Server_lookup</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="order_view.php">Order_view</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="logout.php">Log_out</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+
 <body>
     <div class="form-container">
         <!-- Form to search for customer orders -->
@@ -76,29 +108,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['cust_name'])) {
     </div>
 
     <div class="content">
-        <?php if (!empty($orderData)): ?>
-            <!-- Display order results if found -->
-            <h3>Order Results:</h3>
-            <table class="form-control" border="1" style="margin-top: 20px; width: 100%;">
-                <thead>
+    <?php if (!empty($orderData)): ?>
+        <!-- Display order results if found -->
+        <h3>Order Results:</h3>
+        <table class="form-control" border="1" style="margin-top: 20px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Order ID</th>
+                    <th>Order Time</th>
+                    <th>Item</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($orderData as $row): ?>
                     <tr>
-                        <th>Customer</th>
-                        <th>Order ID</th>
-                        <th>Order Time</th>
-                        <th>Item</th>
-                        <th>Price</th>
+                        <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
+                        <td><?= htmlspecialchars($row['order_id']) ?></td>
+                        <td><?= htmlspecialchars($row['order_time']) ?></td>
+                        <td><?= htmlspecialchars($row['item_name']) ?></td>
+                        <td>$<?= number_format($row['item_price'], 2) ?></td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($orderData as $row): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
-                            <td><?= htmlspecialchars($row['order_id']) ?></td>
-                            <td><?= htmlspecialchars($row['order_time']) ?></td>
-                            <td><?= htmlspecialchars($row['item_name']) ?></td>
-                            <td>$<?= number_format($row['item_price'], 2) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+        <!-- Display a message if no orders are found -->
+        <p>No orders found for the provided customer name.</p>
+    <?php endif; ?>
+</div>
