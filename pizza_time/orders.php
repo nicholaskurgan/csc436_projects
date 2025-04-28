@@ -593,9 +593,6 @@ $staffOptions = pdo($pdo,
             </div>
             </div>
         </div>
-        <button type="button" id="add-item" class="btn btn-secondary btn-sm">
-            + Add Item
-        </button>
         </div>
 
         <button type="submit" name="place_order" class="btn btn-primary">
