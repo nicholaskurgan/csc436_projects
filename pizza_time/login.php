@@ -156,8 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Login / Sign Up</title>
-    <link rel="stylesheet" href="CSS/login_signup.css">
-    <link rel="stylesheet" href="CSS/based.css">
+    <link rel="stylesheet" href="css/login_signup.css">
+    <link rel="stylesheet" href="css/based.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <body>
