@@ -104,6 +104,11 @@ if (isset($_POST['add_item'])) {
 }
 
 // Handle order lookup
+function validate_phone($phone) {
+    return preg_match('/^\d{10}$/', $phone);
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lookup'])) {
     $phone = trim($_POST['phone'] ?? '');
     $clean_phone = preg_replace('/[^0-9]/', '', $phone);
