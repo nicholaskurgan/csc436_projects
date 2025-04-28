@@ -73,13 +73,10 @@
                         <a class="nav-link text-white fw-bold px-lg-5" href="manage.php">Managment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="order.php">Orders</a>
+                        <a class="nav-link text-white fw-bold px-lg-5" href="orders.php">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white fw-bold px-lg-5" href="server_lookup.php">Server_lookup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white fw-bold px-lg-5" href="order_view.php">Order_view</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white fw-bold px-lg-5" href="logout.php">Log_out</a>

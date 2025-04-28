@@ -308,6 +308,35 @@ $staffOptions = pdo($pdo,
     <link rel="stylesheet" href="css/orders.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom-green w-100">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- change link if you had the chance-->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav menu">
+                <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="manage.php">Managment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="orders.php">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="server_lookup.php">Server_lookup</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold px-lg-5" href="logout.php">Log_out</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+
+
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">Order Management</h2>
