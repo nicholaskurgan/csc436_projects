@@ -1,33 +1,34 @@
 <?php
-require 'includes/session.php';
+require 'includes/session.php'; // Include session management to ensure the user is logged in
 
 // Must be logged in
 if (!isset($_SESSION['logged_in']) || !isset($_SESSION['email'])) {
-    header('Location: login.php');
+    header('Location: login.php'); // Redirect to login page if the user is not logged in
     exit;
 }
 
 // Get staffID for this user based on email
 $sql = "SELECT staffID FROM users WHERE email = :email";
-$staffID = pdo($pdo, $sql, ['email' => $_SESSION['email']])->fetchColumn();
+$staffID = pdo($pdo, $sql, ['email' => $_SESSION['email']])->fetchColumn(); // Fetch the staffID of the logged-in user
 
 if (!$staffID) {
-    die("Access denied. Staff ID not found.");
+    die("Access denied. Staff ID not found."); // Terminate if no staffID is found
 }
 
 // Get position from staff table
 $sql = "SELECT position FROM staff WHERE staffID = :staffID";
-$position = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn();
+$position = pdo($pdo, $sql, ['staffID' => $staffID])->fetchColumn(); // Fetch the position of the logged-in user
 
+// Restrict access to Managers and Owners only
 if ($position !== 'Manager' && $position !== 'Owner') {
     die("Access denied. This page is for Managers and Owners only.");
 }
 
 // Initialize variables for salary update
-$update_message = '';
+$update_message = ''; // Message to display after updating salary
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_POST['newSalary'])) {
-    $targetStaffID = trim($_POST['targetStaffID']);
-    $newSalary = trim($_POST['newSalary']);
+    $targetStaffID = trim($_POST['targetStaffID']); // Get the target staff ID from the form
+    $newSalary = trim($_POST['newSalary']); // Get the new salary from the form
 
     // Validate inputs
     if (!is_numeric($targetStaffID) || !is_numeric($newSalary)) {
@@ -49,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['targetStaffID'], $_PO
 }
 
 // Initialize variables for adding new staff
-$add_message = '';
+$add_message = ''; // Message to display after adding a new staff member
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lname'], $_POST['position'])) {
-    $fname = trim($_POST['fname']);
-    $lname = trim($_POST['lname']);
-    $position = trim($_POST['position']);
-    $salary = isset($_POST['salary']) && is_numeric($_POST['salary']) ? $_POST['salary'] : null;
+    $fname = trim($_POST['fname']); // Get the first name from the form
+    $lname = trim($_POST['lname']); // Get the last name from the form
+    $position = trim($_POST['position']); // Get the position from the form
+    $salary = isset($_POST['salary']) && is_numeric($_POST['salary']) ? $_POST['salary'] : null; // Get the salary if provided
 
     // Validate inputs
     if (empty($fname) || empty($lname) || !in_array($position, ['Server', 'Kitchen', 'Manager'])) {
@@ -89,15 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
     }
 }
 
-
-
 // Handle clearing orders and food tables
-$clear_message = '';
+$clear_message = ''; // Message to display after clearing tables
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clearTables'])) {
     if ($_POST['clearTables'] === 'confirm') {
         try {
-            $pdo->exec("TRUNCATE TABLE orders");
-            $pdo->exec("TRUNCATE TABLE food");
+            $pdo->exec("TRUNCATE TABLE orders"); // Clear all data from the orders table
+            $pdo->exec("TRUNCATE TABLE food"); // Clear all data from the food table
             $clear_message = 'Orders and food tables have been cleared successfully.';
         } catch (PDOException $e) {
             $clear_message = 'Error clearing tables: ' . $e->getMessage();
@@ -106,8 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clearTables'])) {
         $clear_message = 'Click the button again to confirm clearing the tables.';
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>

@@ -1,21 +1,25 @@
 <?php
 // order.php
-require_once 'includes/database-connection.php';
-require_once 'includes/validate.php';
-session_start();
+// This script handles order management, including placing new orders, looking up existing orders, and modifying orders.
 
-$phone    = '';
-$orders   = [];
-$error    = '';
-$customer = null;
-$success  = '';
+require_once 'includes/database-connection.php'; // Include the database connection file
+require_once 'includes/validate.php'; // Include validation functions
+session_start(); // Start the session to manage user state
+
+// Initialize variables
+$phone    = ''; // Stores the phone number for lookup
+$orders   = []; // Stores the list of orders for a customer
+$error    = ''; // Stores error messages
+$customer = null; // Stores customer information
+$success  = ''; // Stores success messages
 
 // Handle order cancellation
 if (isset($_POST['cancel_order'])) {
-    $orderID = $_POST['orderID'];
-    $phone   = preg_replace('/[^0-9]/', '', $_POST['phone']);
+    $orderID = $_POST['orderID']; // Get the order ID from the form
+    $phone   = preg_replace('/[^0-9]/', '', $_POST['phone']); // Sanitize the phone number
 
     try {
+        // Check if the order exists and belongs to the customer
         $order = pdo($pdo,
             "SELECT orders.orderID
              FROM orders
@@ -26,14 +30,9 @@ if (isset($_POST['cancel_order'])) {
         )->fetch();
 
         if ($order) {
-            pdo($pdo,
-                "DELETE FROM orders WHERE orderID = ?",
-                [$orderID]
-            );
-            pdo($pdo,
-                "DELETE FROM food   WHERE orderID = ?",
-                [$orderID]
-            );
+            // Delete the order and its associated food items
+            pdo($pdo, "DELETE FROM orders WHERE orderID = ?", [$orderID]);
+            pdo($pdo, "DELETE FROM food   WHERE orderID = ?", [$orderID]);
             $success = "Order #$orderID has been cancelled";
         } else {
             $error = "Order not found or access denied";
@@ -43,13 +42,14 @@ if (isset($_POST['cancel_order'])) {
     }
 }
 
-// Remove a single line‐item
+// Remove a single line-item from an order
 if (isset($_POST['remove_item'])) {
-    $orderID = $_POST['orderID'];
-    $foodID  = $_POST['foodID'];
-    $phone   = preg_replace('/[^0-9]/','', $_POST['phone']);
+    $orderID = $_POST['orderID']; // Get the order ID
+    $foodID  = $_POST['foodID']; // Get the food ID
+    $phone   = preg_replace('/[^0-9]/','', $_POST['phone']); // Sanitize the phone number
 
     try {
+        // Check if the order exists and belongs to the customer
         $check = pdo($pdo,
             "SELECT orders.orderID
              FROM orders
@@ -60,6 +60,7 @@ if (isset($_POST['remove_item'])) {
         )->fetch();
 
         if ($check) {
+            // Remove the specific food item from the order
             pdo($pdo, "DELETE FROM food WHERE foodID = ?", [$foodID]);
             $success = "Item removed from order #$orderID.";
         } else {
@@ -70,15 +71,16 @@ if (isset($_POST['remove_item'])) {
     }
 }
 
-// Add a new line‐item
+// Add a new line-item to an order
 if (isset($_POST['add_item'])) {
-    $orderID          = $_POST['orderID'];
-    $menuID           = $_POST['menuID'];
-    $amount           = $_POST['amount'];
-    $customer_request = trim($_POST['customer_request']);
-    $phone            = preg_replace('/[^0-9]/','', $_POST['phone']);
+    $orderID          = $_POST['orderID']; // Get the order ID
+    $menuID           = $_POST['menuID']; // Get the menu item ID
+    $amount           = $_POST['amount']; // Get the quantity
+    $customer_request = trim($_POST['customer_request']); // Get any special request
+    $phone            = preg_replace('/[^0-9]/','', $_POST['phone']); // Sanitize the phone number
 
     try {
+        // Check if the order exists and belongs to the customer
         $check = pdo($pdo,
             "SELECT orders.orderID
              FROM orders
@@ -89,6 +91,7 @@ if (isset($_POST['add_item'])) {
         )->fetch();
 
         if ($check) {
+            // Add the new item to the order
             pdo($pdo,
                 "INSERT INTO food (orderID, menuID, amount, customer_request)
                  VALUES (?,?,?,?)",
@@ -103,21 +106,21 @@ if (isset($_POST['add_item'])) {
     }
 }
 
-// Handle order lookup
+// Validate phone number format
 function validate_phone($phone) {
-    return preg_match('/^\d{10}$/', $phone);
+    return preg_match('/^\d{10}$/', $phone); // Ensure the phone number is exactly 10 digits
 }
 
-
+// Handle order lookup
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lookup'])) {
-    $phone = trim($_POST['phone'] ?? '');
-    $clean_phone = preg_replace('/[^0-9]/', '', $phone);
+    $phone = trim($_POST['phone'] ?? ''); // Get the phone number from the form
+    $clean_phone = preg_replace('/[^0-9]/', '', $phone); // Sanitize the phone number
 
     if (!validate_phone($clean_phone)) {
         $error = "Invalid phone number format";
     } else {
         try {
-            // Customer + address lookup
+            // Lookup customer and address information
             $customer = pdo($pdo,
                 "SELECT
                     customer.custID,
@@ -134,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lookup'])) {
             )->fetch();
 
             if ($customer) {
-                // Orders + method lookup
+                // Lookup orders and associated items for the customer
                 $orders = pdo($pdo,
                     "SELECT
                         orders.orderID,
@@ -169,19 +172,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lookup'])) {
     }
     $methodOptions = pdo($pdo, "SELECT method_type FROM order_method")->fetchAll(PDO::FETCH_COLUMN);
 }
+
 // Handle new order placement
 if (isset($_POST['place_order'])) {
-    $phone    = preg_replace('/\D/', '', $_POST['phone'] ?? '');
-    $fname    = trim($_POST['fname'] ?? '');
-    $lname    = trim($_POST['lname'] ?? '');
-    $methodID = intval($_POST['methodID'] ?? 0);
-    $items    = $_POST['items'] ?? [];
-    $house_number = trim($_POST['house_number'] ?? '');
-    $street_name  = trim($_POST['street_name']  ?? '');
-    $table_num = trim($_POST['table_num'] ?? '');
-    
+    $phone    = preg_replace('/\D/', '', $_POST['phone'] ?? ''); // Sanitize the phone number
+    $fname    = trim($_POST['fname'] ?? ''); // Get the first name
+    $lname    = trim($_POST['lname'] ?? ''); // Get the last name
+    $methodID = intval($_POST['methodID'] ?? 0); // Get the order method ID
+    $items    = $_POST['items'] ?? []; // Get the list of items
+    $house_number = trim($_POST['house_number'] ?? ''); // Get the house number
+    $street_name  = trim($_POST['street_name']  ?? ''); // Get the street name
+    $table_num = trim($_POST['table_num'] ?? ''); // Get the table number (if dine-in)
+
     try {
-        // basic validation
+        // Basic validation
         if (strlen($phone) !== 10) {
             throw new Exception("Phone must be 10 digits.");
         }
@@ -192,7 +196,7 @@ if (isset($_POST['place_order'])) {
             throw new Exception("Add at least one item.");
         }
 
-        // 1) Lookup or create customer
+        // Lookup or create customer
         $row = pdo($pdo,
             "SELECT custID FROM customer WHERE phone_number = ?",
             [$phone]
@@ -209,16 +213,16 @@ if (isset($_POST['place_order'])) {
                 [$fname, $lname, $phone]
             );
             $custID = $pdo->lastInsertId();
-        } 
+        }
 
-        // 2) Create the order
+        // Create the order
         $method = pdo($pdo,
             "SELECT method_type FROM order_method WHERE methodID = ?",
             [$methodID]
         )->fetchColumn();
 
         if ($method === 'dinein') {
-            // require table number
+            // Require table number for dine-in orders
             if (empty($table_num)) {
                 throw new Exception("Table number is required for dine-in.");
             }
@@ -243,7 +247,7 @@ if (isset($_POST['place_order'])) {
                 [$staffID, $tableID]
             );
         } else {
-            // non-dine-in
+            // Non-dine-in orders
             pdo($pdo,
             "INSERT INTO orders (custID, methodID, datetime_placed)
              VALUES (?, ?, NOW())",
@@ -251,21 +255,8 @@ if (isset($_POST['place_order'])) {
         }
 
         $orderID = $pdo->lastInsertId();
-        // 3) Insert each line-item
-        if ($tableID) {
-            pdo($pdo,
-              "INSERT INTO orders (custID, tableID, methodID, datetime_placed)
-               VALUES (?,?,?,NOW())",
-              [$custID, $tableID, $methodID]
-            );
-          } else {
-            pdo($pdo,
-              "INSERT INTO orders (custID, methodID, datetime_placed)
-               VALUES (?,?,NOW())",
-              [$custID, $methodID]
-            );
-          }
-          $orderID = $pdo->lastInsertId();
+
+        // Insert each line-item
         foreach ($items as $i) {
             $m = intval($i['menuID']);
             $q = intval($i['amount']);
@@ -288,14 +279,14 @@ if (isset($_POST['place_order'])) {
 
 // Load menu items for "Add item" dropdown
 $menuItems = pdo($pdo, "SELECT menuID, item_name FROM menu")->fetchAll();
-// Load order‐method IDs + types
+// Load order-method IDs + types
 $methodOptions = pdo($pdo,
     "SELECT methodID, method_type
        FROM order_method
       ORDER BY methodID",
     []
 )->fetchAll(PDO::FETCH_ASSOC);
-// Load servers for dine in
+// Load servers for dine-in
 $staffOptions = pdo($pdo,
     "SELECT staffID,
             CONCAT(fname,' ',lname) AS server_name
