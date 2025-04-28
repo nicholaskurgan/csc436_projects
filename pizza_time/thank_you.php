@@ -1,5 +1,4 @@
 <?php
-// thank_you.php
 session_start();
 ?>
 <!DOCTYPE html>
@@ -7,7 +6,6 @@ session_start();
 <head>
   <meta charset="UTF-8">
   <title>Thank You</title>
-  <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -17,11 +15,9 @@ session_start();
 
   <div class="card text-center border-0 shadow" style="max-width: 24rem;">
     <div class="card-body">
-      <!-- Changed text-primary to text-dark to render header in black -->
       <h1 class="card-title display-5 mb-3 text-dark">
         Thank you!
       </h1>
-      <!-- Paragraph inherits body’s text-dark class -->
       <p class="card-text lead mb-4 text-dark">
         Your account has been successfully created.
       </p>
