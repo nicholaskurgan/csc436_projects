@@ -90,19 +90,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fname'], $_POST['lnam
     }
 }
 
-// Handle clearing orders and food tables
+// Handle clearing orders, food, and tables
 $clear_message = ''; // Message to display after clearing tables
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clearTables'])) {
     if ($_POST['clearTables'] === 'confirm') {
         try {
-            $pdo->exec("TRUNCATE TABLE orders"); // Clear all data from the orders table
-            $pdo->exec("TRUNCATE TABLE food"); // Clear all data from the food table
-            $clear_message = 'Orders and food tables have been cleared successfully.';
+            // Clear all data from the orders table
+            $pdo->exec("TRUNCATE TABLE orders");
+
+            // Clear all data from the food table
+            $pdo->exec("TRUNCATE TABLE food");
+
+            // Clear all data from the tables table
+            $pdo->exec("TRUNCATE TABLE tables");
+
+            $clear_message = 'Operational database has been cleared successfully.';
         } catch (PDOException $e) {
-            $clear_message = 'Error clearing tables: ' . $e->getMessage();
+            $clear_message = 'Error clearing database: ' . $e->getMessage();
         }
     } else {
-        $clear_message = 'Click the button again to confirm clearing the tables.';
+        $clear_message = 'Click the button again to confirm clearing the operational database.';
     }
 }
 ?>
