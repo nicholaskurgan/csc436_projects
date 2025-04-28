@@ -304,8 +304,8 @@ $staffOptions = pdo($pdo,
 <head>
     <meta charset="UTF-8">
     <title>Order Management</title>
-    <link rel="stylesheet" href="CSS/based.css">
-    <link rel="stylesheet" href="CSS/orders.css">
+    <link rel="stylesheet" href="css/based.css">
+    <link rel="stylesheet" href="css/orders.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>

@@ -120,9 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clearTables'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
-    <link rel="preload" href="CSS/style.css" as="style">
+    <link rel="preload" href="css/style.css" as="style">
 
-    <link rel = "stylesheet" href = "CSS/style.css">
+    <link rel = "stylesheet" href = "css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
