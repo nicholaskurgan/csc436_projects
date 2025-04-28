@@ -226,35 +226,51 @@ if (isset($_POST['place_order'])) {
             if (empty($table_num)) {
                 throw new Exception("Table number is required for dine-in.");
             }
-            $row = pdo($pdo,
-                "SELECT TableID FROM tables WHERE table_num = ?",
-                [$table_num]
-            )->fetch();
-            if (!$row) {
-                throw new Exception("Invalid table number: $table_num");
-            }
-            $tableID = $row['TableID'];
 
             // Validate server
             $staffID = intval($_POST['staffID'] ?? 0);
             if ($staffID <= 0) {
-                throw new Exception("Please select a server.");
+                throw new Exception("Please select a valid server.");
             }
 
-            // Update table with server
+            // Check if the table exists
+            $row = pdo($pdo,
+                "SELECT tableID FROM tables WHERE table_num = ?",
+                [$table_num]
+            )->fetch();
+
+            if (!$row) {
+                // Insert a new table if it does not exist
+                pdo($pdo,
+                    "INSERT INTO tables (table_num, staffID, datetime_seated) VALUES (?, ?, NOW())",
+                    [$table_num, $staffID]
+                );
+                $tableID = $pdo->lastInsertId(); // Get the newly inserted table ID
+            } else {
+                // Update the existing table with the server ID and datetime_seated
+                $tableID = $row['tableID'];
+                pdo($pdo,
+                    "UPDATE tables SET staffID = ?, datetime_seated = NOW() WHERE tableID = ?",
+                    [$staffID, $tableID]
+                );
+            }
+
+            // Insert the dine-in order into the orders table
             pdo($pdo,
-                "UPDATE tables SET staffID = ? WHERE tableID = ?",
-                [$staffID, $tableID]
+                "INSERT INTO orders (custID, tableID, methodID, datetime_placed)
+                 VALUES (?, ?, ?, NOW())",
+                [$custID, $tableID, $methodID]
             );
         } else {
             // Non-dine-in orders
             pdo($pdo,
-            "INSERT INTO orders (custID, methodID, datetime_placed)
-             VALUES (?, ?, NOW())",
-            [$custID, $methodID]);
+                "INSERT INTO orders (custID, methodID, datetime_placed)
+                 VALUES (?, ?, NOW())",
+                [$custID, $methodID]
+            );
         }
 
-        $orderID = $pdo->lastInsertId();
+        $orderID = $pdo->lastInsertId(); // Get the newly created order ID
 
         // Insert each line-item
         foreach ($items as $i) {
@@ -266,7 +282,7 @@ if (isset($_POST['place_order'])) {
             }
             pdo($pdo,
                 "INSERT INTO food (orderID, menuID, amount, customer_request)
-                 VALUES (?,?,?,?)",
+                 VALUES (?, ?, ?, ?)",
                 [$orderID, $m, $q, $r]
             );
         }
