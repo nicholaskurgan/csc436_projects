@@ -604,8 +604,8 @@ $staffOptions = pdo($pdo,
     </form>
     </div>
 </div>
-<script src = "JavaScipt/toggle.js"></script>
-<script src = "JavaScipt/hide.js"></script>
+<script src = "JavaScript/toggle.js"></script>
+<script src = "JavaScript/hide.js"></script>
 
 </body>
 </html>
