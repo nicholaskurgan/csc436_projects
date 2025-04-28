@@ -21,7 +21,7 @@ if (isset($_POST['cancel_order'])) {
     try {
         // Check if the order exists and belongs to the customer
         $order = pdo($pdo,
-            "SELECT orders.orderID
+            "SELECT orders.orderID, orders.tableID
              FROM orders
              JOIN customer
                ON orders.custID = customer.custID
@@ -30,12 +30,20 @@ if (isset($_POST['cancel_order'])) {
         )->fetch();
 
         if ($order) {
+            $tableID = $order['tableID']; // Get the tableID associated with the order
+
             // Delete the order and its associated food items
             pdo($pdo, "DELETE FROM orders WHERE orderID = ?", [$orderID]);
             pdo($pdo, "DELETE FROM food   WHERE orderID = ?", [$orderID]);
-            $success = "Order #$orderID has been cancelled";
+
+            // If the order is dine-in, delete the corresponding table entry
+            if (!empty($tableID)) {
+                pdo($pdo, "DELETE FROM tables WHERE tableID = ?", [$tableID]);
+            }
+
+            $success = "Order #$orderID has been cancelled.";
         } else {
-            $error = "Order not found or access denied";
+            $error = "Order not found or access denied.";
         }
     } catch (PDOException $e) {
         $error = "Cancellation failed: " . $e->getMessage();
@@ -233,10 +241,10 @@ if (isset($_POST['place_order'])) {
                 throw new Exception("Please select a valid server.");
             }
 
-            // Check if the table exists
+            // Check if the table exists with the same table_num and staffID
             $row = pdo($pdo,
-                "SELECT tableID FROM tables WHERE table_num = ?",
-                [$table_num]
+                "SELECT tableID, datetime_seated FROM tables WHERE table_num = ? AND staffID = ?",
+                [$table_num, $staffID]
             )->fetch();
 
             if (!$row) {
@@ -247,12 +255,21 @@ if (isset($_POST['place_order'])) {
                 );
                 $tableID = $pdo->lastInsertId(); // Get the newly inserted table ID
             } else {
-                // Update the existing table with the server ID and datetime_seated
-                $tableID = $row['tableID'];
-                pdo($pdo,
-                    "UPDATE tables SET staffID = ?, datetime_seated = NOW() WHERE tableID = ?",
-                    [$staffID, $tableID]
-                );
+                // Check if the datetime_seated is different
+                $existingDatetimeSeated = $row['datetime_seated'];
+                $currentDatetime = date('Y-m-d H:i:s'); // Get the current date and time
+
+                if ($existingDatetimeSeated !== $currentDatetime) {
+                    // Insert a new row with the current datetime_seated
+                    pdo($pdo,
+                        "INSERT INTO tables (table_num, staffID, datetime_seated) VALUES (?, ?, NOW())",
+                        [$table_num, $staffID]
+                    );
+                    $tableID = $pdo->lastInsertId(); // Get the newly inserted table ID
+                } else {
+                    // Use the existing tableID
+                    $tableID = $row['tableID'];
+                }
             }
 
             // Insert the dine-in order into the orders table
