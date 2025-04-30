@@ -20,7 +20,7 @@ body {
 }
 .left-side {
     flex: 1;
-    background: url('https://pbs.twimg.com/media/E-YoMXZX0AQOHoI.jpg') center/cover;
+    background: url('https://media.discordapp.net/attachments/1336041989849878650/1365493499411300433/1FA46976-F658-4C25-9520-F2D8ACE0F673.png?ex=6812c86b&is=681176eb&hm=3e7d9444892ffbe5fe19ce15a2f18140e0e4931c6323047fff3a09e86b78047c&=&format=webp&quality=lossless&width=914&height=914') center/cover;
     background-size: cover;
     position: relative;
 }
