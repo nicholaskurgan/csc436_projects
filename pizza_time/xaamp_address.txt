@@ -16,3 +16,6 @@ zoey_sullivan@gmail.com
 123321
 
 this is purely for easier testing on nicks machine, happy bug hunting
+
+
+ok adding tex tto push to github again cpanel i hate you
