@@ -1,0 +1,21 @@
+http://localhost:80/pizza/login.php
+
+server login-
+scarlett_hall
+scarlett_hall@gmail.com
+123321
+
+owner login-
+jane_thompson
+jthompson@gmail.com
+123456
+
+manager login-
+zoey_sullivan
+zoey_sullivan@gmail.com
+123321
+
+this is purely for easier testing on nicks machine, happy bug hunting
+
+
+ok adding tex tto push to github again cpanel i hate you
