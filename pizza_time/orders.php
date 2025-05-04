@@ -7,11 +7,13 @@ require_once 'includes/validate.php'; // Include validation functions
 session_start(); // Start the session to manage user state
 
 // Initialize variables
+
 $phone = ''; // Stores the phone number for lookup
 $orders = []; // Stores the list of orders for a customer
 $error = ''; // Stores error messages
 $customer = null; // Stores customer information
 $success = ''; // Stores success messages
+
 
 // Handle order cancellation
 if (isset($_POST['cancel_order'])) {
@@ -86,6 +88,7 @@ if (isset($_POST['add_item'])) {
     $amount = $_POST['amount']; // Get the quantity
     $customer_request = trim($_POST['customer_request']); // Get any special request
     $phone = preg_replace('/[^0-9]/','', $_POST['phone']); // Sanitize the phone number
+
 
     try {
         // Check if the order exists and belongs to the customer
@@ -183,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lookup'])) {
 
 // Handle new order placement
 if (isset($_POST['place_order'])) {
+
     $phone = preg_replace('/\D/', '', $_POST['phone'] ?? ''); // Sanitize the phone number
     $fname = trim($_POST['fname'] ?? ''); // Get the first name
     $lname = trim($_POST['lname'] ?? ''); // Get the last name
@@ -190,6 +194,7 @@ if (isset($_POST['place_order'])) {
     $items = $_POST['items'] ?? []; // Get the list of items
     $house_number = trim($_POST['house_number'] ?? ''); // Get the house number
     $street_name = trim($_POST['street_name']  ?? ''); // Get the street name
+
     $table_num = trim($_POST['table_num'] ?? ''); // Get the table number (if dine-in)
 
     try {
