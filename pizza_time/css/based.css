@@ -168,6 +168,9 @@ label {
     margin-top: 10px;
     color: #2b2b2b;
 }
+.form-label{
+    color:black
+}
 .btn-green {
     background-color: #00ff00;
     color: #000;
